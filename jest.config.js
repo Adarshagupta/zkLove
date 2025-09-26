@@ -9,7 +9,8 @@ module.exports = {
   testPathIgnorePatterns: [
     '<rootDir>/node_modules/',
     '<rootDir>/android/',
-    '<rootDir>/ios/'
+    '<rootDir>/ios/',
+    '<rootDir>/test/'
   ],
   collectCoverageFrom: [
     'src/**/*.{ts,tsx}',

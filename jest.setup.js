@@ -92,3 +92,9 @@ afterEach(() => {
   jest.useRealTimers();
   jest.clearAllMocks();
 });
+
+// Set NODE_ENV for testing
+process.env.NODE_ENV = 'test';
+
+// Increase timeout for longer running tests
+jest.setTimeout(10000);

@@ -30,7 +30,9 @@ export class FaceVerificationService {
 
     try {
       // Simulate face detection processing
-      await new Promise(resolve => setTimeout(resolve, 2000));
+      if (process.env.NODE_ENV !== 'test') {
+        await new Promise(resolve => setTimeout(resolve, 2000));
+      }
 
       // In a real implementation, you would:
       // 1. Load the image from imageUri

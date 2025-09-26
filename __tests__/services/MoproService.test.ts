@@ -16,7 +16,13 @@ describe('MoproService', () => {
         timestamp: Math.floor(Date.now() / 1000),
       };
 
-      const proof = await service.generateProof(inputs);
+      // Start the async operation
+      const proofPromise = service.generateProof(inputs);
+      
+      // Fast-forward time to skip the delays (1s + 5s)
+      jest.advanceTimersByTime(6000);
+      
+      const proof = await proofPromise;
 
       expect(proof).toBeDefined();
       expect(proof.proof).toBeInstanceOf(Uint8Array);
@@ -30,7 +36,13 @@ describe('MoproService', () => {
     it('should handle missing inputs gracefully', async () => {
       const inputs = {};
 
-      const proof = await service.generateProof(inputs);
+      // Start the async operation
+      const proofPromise = service.generateProof(inputs);
+      
+      // Fast-forward time to skip the delays
+      jest.advanceTimersByTime(6000);
+      
+      const proof = await proofPromise;
 
       expect(proof).toBeDefined();
       expect(proof.publicInputs).toContain('mock_face_hash');
@@ -45,7 +57,13 @@ describe('MoproService', () => {
         publicInputs: ['input1', 'input2', 'input3'],
       };
 
-      const isValid = await service.verifyProof(mockProof);
+      // Start the async operation
+      const verifyPromise = service.verifyProof(mockProof);
+      
+      // Fast-forward time to skip the 1-second delay
+      jest.advanceTimersByTime(1000);
+      
+      const isValid = await verifyPromise;
 
       expect(isValid).toBe(true);
     });
@@ -142,13 +160,17 @@ describe('MoproService', () => {
       const newProvingKeyPath = 'new/proving/key.zkey';
       const newVerificationKeyPath = 'new/verification/key.json';
 
-      await expect(
-        service.updateCircuitFiles(
-          newCircuitPath,
-          newProvingKeyPath,
-          newVerificationKeyPath
-        )
-      ).resolves.toBeUndefined();
+      // Start the async operation
+      const updatePromise = service.updateCircuitFiles(
+        newCircuitPath,
+        newProvingKeyPath,
+        newVerificationKeyPath
+      );
+      
+      // Fast-forward time to skip the 1-second delay
+      jest.advanceTimersByTime(1000);
+      
+      await expect(updatePromise).resolves.toBeUndefined();
     });
   });
 });

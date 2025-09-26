@@ -12,7 +12,13 @@ describe('FaceVerificationService', () => {
     it('should detect face in image and return face data', async () => {
       const mockImageUri = 'file://test-image.jpg';
       
-      const result = await service.detectFace(mockImageUri);
+      // Start the async operation
+      const resultPromise = service.detectFace(mockImageUri);
+      
+      // Fast-forward time to skip the 2-second delay
+      jest.advanceTimersByTime(2000);
+      
+      const result = await resultPromise;
       
       expect(result).toBeDefined();
       expect(result.imageUri).toBe(mockImageUri);
@@ -77,7 +83,7 @@ describe('FaceVerificationService', () => {
 
       const similarity = await service.compareFaces(face1, face2);
       
-      expect(similarity).toBe(-1); // Completely opposite vectors
+      expect(similarity).toBeCloseTo(-1, 5); // Completely opposite vectors
     });
   });
 

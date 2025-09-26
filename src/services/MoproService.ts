@@ -24,7 +24,9 @@ export class MoproService {
       
       // For now, we'll simulate initialization
       console.log('Initializing Mopro service...');
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      if (process.env.NODE_ENV !== 'test') {
+        await new Promise(resolve => setTimeout(resolve, 1000));
+      }
       
       this.initialized = true;
       console.log('Mopro service initialized successfully');
@@ -48,7 +50,9 @@ export class MoproService {
       console.log('Generating zero-knowledge proof...');
       
       // Simulate proof generation time (real ZK proofs can take several seconds)
-      await new Promise(resolve => setTimeout(resolve, 5000));
+      if (process.env.NODE_ENV !== 'test') {
+        await new Promise(resolve => setTimeout(resolve, 5000));
+      }
 
       // In a real implementation, you would:
       // 1. Prepare circuit inputs
@@ -82,7 +86,9 @@ export class MoproService {
       console.log('Verifying zero-knowledge proof...');
       
       // Simulate verification time
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      if (process.env.NODE_ENV !== 'test') {
+        await new Promise(resolve => setTimeout(resolve, 1000));
+      }
 
       // In a real implementation, you would:
       // 1. Load verification key
