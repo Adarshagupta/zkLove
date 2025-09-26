@@ -11,7 +11,7 @@ import {
 } from 'react-native';
 import {StackNavigationProp} from '@react-navigation/stack';
 import DocumentPicker from 'react-native-document-picker';
-import {launchImageLibrary, launchCamera} from 'react-native-image-picker';
+import * as ImagePicker from 'expo-image-picker';
 import {RootStackParamList, IDDocument} from '@types/index';
 import {IDVerificationService} from '@services/IDVerificationService';
 
@@ -44,40 +44,30 @@ const IDVerificationScreen: React.FC<Props> = ({navigation}) => {
     );
   };
 
-  const openCamera = () => {
-    launchCamera(
-      {
-        mediaType: 'photo',
-        quality: 0.8,
-        includeBase64: false,
-      },
-      (response) => {
-        if (response.assets && response.assets[0]) {
-          const imageUri = response.assets[0].uri;
-          if (imageUri) {
-            setSelectedImage(imageUri);
-          }
-        }
-      }
-    );
+  const openCamera = async () => {
+    const result = await ImagePicker.launchCameraAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsEditing: true,
+      aspect: [4, 3],
+      quality: 0.8,
+    });
+
+    if (!result.canceled && result.assets[0]) {
+      setSelectedImage(result.assets[0].uri);
+    }
   };
 
-  const openGallery = () => {
-    launchImageLibrary(
-      {
-        mediaType: 'photo',
-        quality: 0.8,
-        includeBase64: false,
-      },
-      (response) => {
-        if (response.assets && response.assets[0]) {
-          const imageUri = response.assets[0].uri;
-          if (imageUri) {
-            setSelectedImage(imageUri);
-          }
-        }
-      }
-    );
+  const openGallery = async () => {
+    const result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsEditing: true,
+      aspect: [4, 3],
+      quality: 0.8,
+    });
+
+    if (!result.canceled && result.assets[0]) {
+      setSelectedImage(result.assets[0].uri);
+    }
   };
 
   const processDocument = async () => {

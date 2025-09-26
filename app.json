@@ -1,4 +1,31 @@
 {
-  "name": "ZKIdentityVerification",
-  "displayName": "ZK Identity Verification"
+  "expo": {
+    "name": "ZK Identity Verification",
+    "slug": "zk-identity-verification",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "userInterfaceStyle": "light",
+    "assetBundlePatterns": [
+      "**/*"
+    ],
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.zkidentity.verification"
+    },
+    "android": {
+      "package": "com.zkidentity.verification",
+      "permissions": [
+        "android.permission.CAMERA",
+        "android.permission.READ_EXTERNAL_STORAGE"
+      ]
+    },
+    "plugins": [
+      [
+        "expo-camera",
+        {
+          "cameraPermission": "Allow ZK Identity to access your camera for face verification."
+        }
+      ]
+    ]
+  }
 }

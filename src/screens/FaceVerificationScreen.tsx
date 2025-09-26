@@ -8,7 +8,7 @@ import {
   ActivityIndicator,
 } from 'react-native';
 import {StackNavigationProp} from '@react-navigation/stack';
-import {Camera, useCameraDevices} from 'react-native-vision-camera';
+import {Camera} from 'expo-camera';
 import {RootStackParamList, FaceData} from '@types/index';
 import {FaceVerificationService} from '@services/FaceVerificationService';
 
@@ -27,8 +27,6 @@ const FaceVerificationScreen: React.FC<Props> = ({navigation}) => {
   const [isProcessing, setIsProcessing] = useState<boolean>(false);
   const [capturedFace, setCapturedFace] = useState<FaceData | null>(null);
   
-  const devices = useCameraDevices();
-  const device = devices.front;
   const camera = useRef<Camera>(null);
   const faceService = new FaceVerificationService();
 
@@ -38,8 +36,8 @@ const FaceVerificationScreen: React.FC<Props> = ({navigation}) => {
 
   const requestCameraPermission = async () => {
     try {
-      const permission = await Camera.requestCameraPermission();
-      setHasPermission(permission === 'authorized');
+      const { status } = await Camera.requestCameraPermissionsAsync();
+      setHasPermission(status === 'granted');
     } catch (error) {
       console.error('Error requesting camera permission:', error);
       Alert.alert('Error', 'Failed to request camera permission');
@@ -51,13 +49,13 @@ const FaceVerificationScreen: React.FC<Props> = ({navigation}) => {
 
     try {
       setIsCapturing(true);
-      const photo = await camera.current.takePhoto({
-        qualityPrioritization: 'quality',
-        flash: 'off',
+      const photo = await camera.current.takePictureAsync({
+        quality: 0.8,
+        base64: false,
       });
 
       setIsProcessing(true);
-      const faceData = await faceService.detectFace(photo.path);
+      const faceData = await faceService.detectFace(photo.uri);
       
       if (faceData.confidence > 0.8) {
         setCapturedFace(faceData);
@@ -111,13 +109,6 @@ const FaceVerificationScreen: React.FC<Props> = ({navigation}) => {
     );
   }
 
-  if (!device) {
-    return (
-      <View style={styles.permissionContainer}>
-        <Text style={styles.permissionText}>No camera device available</Text>
-      </View>
-    );
-  }
 
   return (
     <View style={styles.container}>
@@ -132,9 +123,8 @@ const FaceVerificationScreen: React.FC<Props> = ({navigation}) => {
         <Camera
           ref={camera}
           style={styles.camera}
-          device={device}
-          isActive={true}
-          photo={true}
+          type={Camera.Constants.Type.front}
+          ratio="16:9"
         />
         <View style={styles.overlay}>
           <View style={styles.faceFrame} />
